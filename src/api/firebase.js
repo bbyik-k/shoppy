@@ -1,6 +1,12 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -19,17 +25,14 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
-export function login() {
-  signInWithPopup(auth, provider)
+export async function login() {
+  return signInWithPopup(auth, provider)
     .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential.accessToken;
-      // The signed-in user info.
       const user = result.user;
       console.log(user);
-      // IdP data available using getAdditionalUserInfo(result)
-      // ...
+      return user;
     })
     .catch((error) => {
       console.error(error);
@@ -42,4 +45,24 @@ export function login() {
       // The AuthCredential type that was used.
       const credential = GoogleAuthProvider.credentialFromError(error);
     });
+}
+
+export function logout() {
+  //   return signInWithPopup(auth, provider)
+  //     .then((result) => {
+  //       const user = result.user;
+  //       console.log(user);
+  //       return user;
+  //     })
+  //     .catch(console.error);
+
+  return signOut(auth)
+    .then(() => null)
+    .catch(console.error);
+}
+
+export function onUserStateChange(callback) {
+  onAuthStateChanged(auth, (user) => {
+    callback(user);
+  });
 }
