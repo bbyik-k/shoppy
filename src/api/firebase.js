@@ -25,40 +25,12 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
-export async function login() {
-  return signInWithPopup(auth, provider)
-    .then((result) => {
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      const user = result.user;
-      console.log(user);
-      return user;
-    })
-    .catch((error) => {
-      console.error(error);
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // ...
-      // The email of the user's account used.
-      const email = error.customData.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-    });
+export function login() {
+  signInWithPopup(auth, provider).catch(console.error);
 }
 
 export function logout() {
-  //   return signInWithPopup(auth, provider)
-  //     .then((result) => {
-  //       const user = result.user;
-  //       console.log(user);
-  //       return user;
-  //     })
-  //     .catch(console.error);
-
-  return signOut(auth)
-    .then(() => null)
-    .catch(console.error);
+  signOut(auth).catch(console.error);
 }
 
 export function onUserStateChange(callback) {
